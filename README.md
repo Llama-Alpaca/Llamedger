@@ -1,10 +1,12 @@
-# 记账助手 (jizhang-assistant)
+# Llamedger（羊驼记账）
 
 一个 Android 自动记账 App。核心理念：**你不用手动记账，付款后它自己记**；**商家退款时，它把对应的那笔支出直接抹掉**。
 
 ---
 
 ## 关于这个项目
+
+**Llamedger = Llama（羊驼）+ Ledger（账本）**。
 
 一个**没有用 IDE、没有用 Android Studio、没有用 Gradle** 的 Android 项目。
 
@@ -130,6 +132,10 @@ jizhang/
 │       └── util/                     配置项、格式化
 ├── tests/                            电脑端测试台（内存存储 + 12 个用例）
 ├── extras/swipe-delete/              已停用的横滑删除实现（存档，不参与编译）
+├── tools/icon_renderer.py            自写矢量光栅化 + PNG 编码（无第三方依赖）
+├── tools/icon_preview.py             把图标转成字符画，便于无图形环境时自检构图
+├── tools/make_icons.py               羊驼图标方案绘制
+├── tools/gen_icon_assets.py          生成各密度图标（传统 + 自适应 + 状态栏）
 ├── tools/check_resources.py          静态检查：控件 id、布局、自定义 View 是否匹配
 ├── tools/check_migration.py          静态检查：数据库升级不丢数据
 ├── build.py                          构建 APK（不依赖 Gradle）
@@ -313,7 +319,34 @@ java -Dfile.encoding=UTF-8 -cp build-test Demo
 
 ---
 
-## 九、版本变更记录
+## 九、应用图标是怎么做出来的
+
+图标是一只小羊驼侧脸（`D_profile` 方案）。这台开发机上**没有任何图像库**（PIL / cairosvg / numpy 都没装），
+AI 生图工具也不可用，所以图标是用一套自写的纯 Python 光栅化器画出来的：
+
+1. `tools/icon_renderer.py`
+   - 用几何方程（椭圆、圆角矩形、多边形）逐像素填充，支持旋转椭圆
+   - 在 3 倍尺寸上绘制，再按面积平均降采样 → 得到平滑的抗锯齿边缘
+   - 自己实现 PNG 编码（zlib 压缩 + CRC 校验），不依赖 Pillow
+2. `tools/icon_preview.py`
+   - 把渲染结果转成**字符画**，这样在看不到图片的环境里也能检查构图
+     （哪块是背景、耳朵在哪、眼睛有没有和口鼻挤在一起）
+   - 开发中靠它发现并修正了两轮问题：五官间距过近、浅色羊驼与浅色背景对比度不足
+3. `tools/gen_icon_assets.py`
+   - 传统图标：`mipmap-{m,h,xh,xxh,xxxh}dpi/ic_launcher.png`（48 → 192px）
+   - 自适应图标：`mipmap-anydpi-v26/ic_launcher.xml` + 透明底前景 PNG（108 → 432px）
+   - 状态栏通知图标：`drawable-*/ic_stat_jz.png`（24 → 96px，白色剪影）
+
+要改图标，直接改 `tools/make_icons.py` 里的绘制函数，然后跑：
+
+```powershell
+python tools\make_icons.py          # 生成预览（输出到 preview/icons/）
+python tools\gen_icon_assets.py     # 生成 App 内全套图标资源
+```
+
+---
+
+## 十、版本变更记录
 
 | 版本 | 变更 |
 |---|---|
@@ -322,13 +355,14 @@ java -Dfile.encoding=UTF-8 -cp build-test Demo
 | 1.2.0 | 新增横滑删除；修复首页长按无响应；编辑页新增删除按钮 |
 | 1.2.1 | 数据库升级失败不再静默吞异常；新增列改为容错读取；新增交互入口守卫 |
 | **1.2.2** | **停用横滑删除**（功能回到 1.1.0 的操作方式），保留长按菜单与编辑页删除按钮 |
+| **1.3.0** | **更名为 Llamedger（羊驼记账）**；更换为小羊驼图标（含自适应图标与状态栏图标）；首页取消长按、长按菜单去掉「编辑」项 |
 
 > 版本号必须递增才能覆盖安装 —— Android 不允许安装 versionCode 低于已装版本的 APK。
 > 所以「功能回退」体现在 1.2.2，而不是把版本号改回 1.1.0。
 
 ---
 
-## 十、已知限制
+## 十一、已知限制
 
 1. **依赖通知可见性** — 如果用户把招行 App 的通知权限关了，或系统把通知折叠/静默，就抓不到。所以「通知使用权 + 电池白名单」两项必须开。
 2. **富文本通知** — 部分 ROM 会对通知做摘要合并，导致正文被截断。`NotifyListenerService` 已按「大文本 → 多行 → 普通文本 → 副文本」优先级取最完整的一份。
@@ -341,7 +375,7 @@ java -Dfile.encoding=UTF-8 -cp build-test Demo
 
 ---
 
-## 十一、后续可以做的
+## 十二、后续可以做的
 
 - [ ] 账单导入：解析招行/微信/支付宝导出的 CSV，补齐历史账
 - [ ] 预算与超支提醒

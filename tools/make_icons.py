@@ -6,7 +6,7 @@ from icon_renderer import Canvas, hx, hxa
 from icon_preview import ascii_preview
 
 S = 768
-OUT = r"D:\Download\jizhang\build\icons"
+OUT = r"D:\Download\jizhang\preview\icons"
 os.makedirs(OUT, exist_ok=True)
 
 GREEN       = hx("2E7D5B")
@@ -108,11 +108,8 @@ def icon_c():
     yuan_coin(c, 570, 570, 108)
     return c
 
-def icon_d():
-    """D 侧脸款：长脖子 + 侧脸，最像真实羊驼"""
-    c = rounded_bg(GREEN)
-    c.circle(392, 400, 250, GREEN_MID)
-
+def alpaca_d(c):
+    """D 方案的羊驼本体（不画背景），供各种尺寸复用"""
     # 细长脖子
     c.round_rect(366, 396, 104, 400, 52, CREAM)
     for (x, y, r) in [(470, 512, 50), (474, 600, 46), (462, 676, 42)]:
@@ -135,6 +132,25 @@ def icon_d():
     c.circle(388, 314, 26, DARK)
     c.circle(397, 305, 9, WHITE)
     c.circle(338, 390, 24, hxa("F3A9A9", 110))
+
+
+def alpaca_d_silhouette(c, color):
+    """D 方案的纯色剪影（用于状态栏通知图标）"""
+    c.round_rect(366, 396, 104, 400, 52, color)
+    for (x, y, r) in [(470, 512, 50), (474, 600, 46), (462, 676, 42)]:
+        c.circle(x, y, r, color)
+    c.ellipse(398, 336, 152, 124, color)
+    c.ellipse(474, 208, 35, 94, color, rot=0.20)
+    for (x, y, r) in [(352, 252, 58), (430, 240, 54), (296, 270, 46)]:
+        c.circle(x, y, r, color)
+    c.ellipse(272, 360, 64, 50, color)
+
+
+def icon_d():
+    """D 侧脸款（旧版：自带圆角方底，用于 API 23-25 的传统图标）"""
+    c = rounded_bg(GREEN)
+    c.circle(392, 400, 250, GREEN_MID)
+    alpaca_d(c)
     return c
 
 # ---------------------------------------------------------------- 渲染

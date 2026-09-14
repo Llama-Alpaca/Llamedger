@@ -109,6 +109,38 @@ class Canvas:
                 out.px[o+3] = a // area
         return out
 
+    def blit_into(self, src, x0, y0, w, h):
+        """把 src 画布缩放贴到本画布上 (x0,y0,w,h) 的矩形里（自动裁剪越界部分）
+
+        用面积平均采样，等价于高质量缩小，避免锯齿。
+        """
+        if w <= 0 or h <= 0: return
+        xs = src.n / float(w)
+        ys = src.n / float(h)
+        for ty in range(int(math.floor(y0)), int(math.ceil(y0 + h))):
+            if ty < 0 or ty >= self.n: continue
+            sy0 = (ty - y0) * ys
+            sy1 = (ty + 1 - y0) * ys
+            iy0 = max(0, int(sy0)); iy1 = min(src.n, max(iy0 + 1, int(math.ceil(sy1))))
+            for tx in range(int(math.floor(x0)), int(math.ceil(x0 + w))):
+                if tx < 0 or tx >= self.n: continue
+                sx0 = (tx - x0) * xs
+                sx1 = (tx + 1 - x0) * xs
+                ix0 = max(0, int(sx0)); ix1 = min(src.n, max(ix0 + 1, int(math.ceil(sx1))))
+                r = g = b = a = cnt = 0
+                for sy in range(iy0, iy1):
+                    base = sy * src.n
+                    for sx in range(ix0, ix1):
+                        i = (base + sx) * 4
+                        al = src.px[i+3]
+                        r += src.px[i] * al; g += src.px[i+1] * al; b += src.px[i+2] * al
+                        a += al; cnt += 1
+                if cnt == 0 or a == 0: continue
+                o = (ty * self.n + tx) * 4
+                pr, pg, pb, pa = r // a, g // a, b // a, a // cnt
+                # 与已有像素做 alpha 合成
+                self.blend(tx, ty, (pr, pg, pb, pa))
+
     def save_png(self, path):
         n = self.n
         raw = bytearray()

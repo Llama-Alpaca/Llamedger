@@ -16,10 +16,21 @@ for fn in os.listdir(os.path.join(RES, "layout")):
     txt = io.open(os.path.join(RES, "layout", fn), encoding="utf-8").read()
     layout_ids[name] = set(re.findall(r'android:id="@\+id/(\w+)"', txt))
 
-drawables = set()
-for d in ("drawable",):
-    for fn in os.listdir(os.path.join(RES, d)):
-        drawables.add(os.path.splitext(fn)[0])
+def collect_res(prefix):
+    """收集指定前缀资源目录里的资源名（含带密度/版本后缀的目录，如 drawable-mdpi、mipmap-anydpi-v26）"""
+    names = set()
+    for d in os.listdir(RES):
+        full = os.path.join(RES, d)
+        if not os.path.isdir(full):
+            continue
+        if d != prefix and not d.startswith(prefix + "-"):
+            continue
+        for fn in os.listdir(full):
+            names.add(os.path.splitext(fn)[0])
+    return names
+
+drawables = collect_res("drawable")
+mipmaps = collect_res("mipmap")
 
 strings = set()
 sp = os.path.join(RES, "values", "strings.xml")
@@ -94,6 +105,15 @@ for fqcn in sorted(custom_views):
 print("检查了 %d 个 Java 文件，%d 个布局，%d 个自定义 View"
       % (checked, len(layout_ids), len(custom_views)))
 print()
+# ---- 清单里的图标引用必须能解析到 ----
+man = io.open(os.path.join(APP, "AndroidManifest.xml"), encoding="utf-8").read()
+for kind, pool in (("mipmap", mipmaps), ("drawable", drawables)):
+    for ref in re.findall(r'@%s/(\w+)' % kind, man):
+        if ref not in pool:
+            problems.append("清单引用了 @%s/%s，但对应资源不存在" % (kind, ref))
+
+print("图标资源：%d 个 drawable，%d 个 mipmap" % (len(drawables), len(mipmaps)))
+
 # ---- 交互入口守卫：删除这类高风险操作，必须有多条可达路径 ----
 UI = os.path.join(JAVA, "com", "jizhang", "assistant", "ui")
 
