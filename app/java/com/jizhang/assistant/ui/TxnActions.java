@@ -3,7 +3,6 @@ package com.jizhang.assistant.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 
 import com.jizhang.assistant.core.engine.RefundEngine;
 import com.jizhang.assistant.core.engine.TransferEngine;
@@ -47,7 +46,6 @@ public final class TxnActions {
         } else if (t.originalTxnId == 0) {
             actions.add("标记为转账（不计入收支）");
         }
-        actions.add("编辑");
         actions.add("删除");
 
         String title = Fmt.money(t.amountCents)
@@ -65,12 +63,6 @@ public final class TxnActions {
 
     private static void handle(Activity act, SqliteStore store, Txn t,
                                String action, Callback cb) {
-        if ("编辑".equals(action)) {
-            Intent i = new Intent(act, AddTxnActivity.class);
-            i.putExtra("txn_id", t.id);
-            act.startActivity(i);
-            return;
-        }
         if ("删除".equals(action)) {
             confirmDelete(act, store, t, cb);
             return;

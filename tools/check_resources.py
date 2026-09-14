@@ -104,11 +104,20 @@ WIRING = [
      "流水页缺少「长按操作菜单」监听"),
     ("ui/AddTxnActivity.java", "R.id.delete",
      "编辑页没有删除入口"),
-    ("ui/MainActivity.java", "setOnLongClickListener",
-     "首页流水缺少长按操作菜单"),
     ("ui/TxnActions.java", "confirmDelete",
      "缺少统一的删除确认逻辑"),
 ]
+
+# 反向断言：这些是「刻意不做」的事，被加回来同样算问题
+FORBIDDEN = [
+    ("ui/MainActivity.java", "setOnLongClickListener",
+     "首页「最近流水」应当保持只读（按设计不加长按）"),
+    ("ui/TxnActions.java", 'actions.add("编辑")',
+     "长按菜单不应再出现「编辑」（点按条目即可编辑）"),
+    ("ui/TxnListActivity.java", "SwipeItemLayout",
+     "横滑删除已停用，不应再出现引用"),
+]
+
 for rel, needle, msg in WIRING:
     path = os.path.join(JAVA, "com", "jizhang", "assistant", rel)
     if not os.path.exists(path):
@@ -117,7 +126,15 @@ for rel, needle, msg in WIRING:
     if needle not in io.open(path, encoding="utf-8").read():
         problems.append(msg + "（%s 中找不到 %s）" % (rel, needle))
 
-print("交互入口守卫：检查了 %d 项" % len(WIRING))
+for rel, needle, msg in FORBIDDEN:
+    path = os.path.join(JAVA, "com", "jizhang", "assistant", rel)
+    if not os.path.exists(path):
+        continue
+    if needle in io.open(path, encoding="utf-8").read():
+        problems.append(msg + "（%s 中出现了 %s）" % (rel, needle))
+
+print("交互入口守卫：%d 项必须存在，%d 项必须不存在"
+      % (len(WIRING), len(FORBIDDEN)))
 
 if problems:
     print("发现问题：")

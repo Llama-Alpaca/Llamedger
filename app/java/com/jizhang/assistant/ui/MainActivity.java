@@ -30,12 +30,6 @@ public class MainActivity extends Activity {
     private LinearLayout recentList;
     private TextView emptyHint;
 
-    private final TxnActions.Callback changed = new TxnActions.Callback() {
-        public void onChanged() {
-            refresh();
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,17 +154,10 @@ public class MainActivity extends Activity {
                     line.setLayoutParams(lp);
                     recentList.addView(line);
                 }
-                final Txn item = recent.get(i);
+                Txn item = recent.get(i);
                 View row = inf.inflate(R.layout.item_txn, recentList, false);
                 TxnAdapter.bind(this, row, item);
                 row.setOnClickListener(new RowClick(item.id));
-                // 长按弹出操作菜单（删除、标记转账等），首页也能直接改
-                row.setOnLongClickListener(new View.OnLongClickListener() {
-                    public boolean onLongClick(View v) {
-                        TxnActions.show(MainActivity.this, store, item, changed);
-                        return true;
-                    }
-                });
                 recentList.addView(row);
             }
         }
