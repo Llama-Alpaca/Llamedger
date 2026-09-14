@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@color/bg">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:background="@drawable/bg_header"
+        android:paddingLeft="16dp" android:paddingRight="16dp"
+        android:paddingTop="16dp" android:paddingBottom="18dp">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="收支统计" android:textColor="@color/white"
+            android:textSize="20sp" android:textStyle="bold" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical"
+            android:layout_marginTop="14dp">
+            <TextView android:id="@+id/prev"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="‹ 上月" android:textColor="@color/white" android:textSize="14sp"
+                android:padding="6dp" />
+            <TextView android:id="@+id/monthLabel"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:gravity="center"
+                android:textColor="@color/white" android:textSize="17sp"
+                android:textStyle="bold" android:text="—" />
+            <TextView android:id="@+id/next"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="下月 ›" android:textColor="@color/white" android:textSize="14sp"
+                android:padding="6dp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginTop="12dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="支出合计" android:textColor="#CCFFFFFF" android:textSize="12sp" />
+                <TextView android:id="@+id/totalOut"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="¥0.00" android:textColor="@color/white"
+                    android:textSize="19sp" android:textStyle="bold" android:layout_marginTop="3dp" />
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="收入合计" android:textColor="#CCFFFFFF" android:textSize="12sp" />
+                <TextView android:id="@+id/totalIn"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="¥0.00" android:textColor="@color/white"
+                    android:textSize="19sp" android:textStyle="bold" android:layout_marginTop="3dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:padding="12dp">
+        <TextView android:id="@+id/tabOut"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="支出构成" android:textSize="13sp" android:textColor="@color/green"
+            android:paddingLeft="14dp" android:paddingRight="14dp"
+            android:paddingTop="7dp" android:paddingBottom="7dp"
+            android:background="@drawable/bg_pill_green" />
+        <TextView android:id="@+id/tabIn"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="收入构成" android:textSize="13sp" android:textColor="@color/text_sub"
+            android:paddingLeft="14dp" android:paddingRight="14dp"
+            android:paddingTop="7dp" android:paddingBottom="7dp"
+            android:background="@drawable/bg_pill_gray"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:paddingLeft="12dp"
+            android:paddingRight="12dp" android:paddingBottom="20dp">
+            <LinearLayout android:id="@+id/statList"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:background="@drawable/bg_card"
+                android:paddingTop="4dp" android:paddingBottom="4dp" />
+            <TextView android:id="@+id/statEmpty"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="本月还没有记录" android:textColor="@color/text_sub"
+                android:textSize="13sp" android:gravity="center" android:padding="40dp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

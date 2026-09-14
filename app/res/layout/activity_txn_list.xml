@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@color/bg">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:background="@drawable/bg_header"
+        android:paddingLeft="16dp" android:paddingRight="16dp"
+        android:paddingTop="16dp" android:paddingBottom="16dp">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="流水明细" android:textColor="@color/white"
+            android:textSize="20sp" android:textStyle="bold" />
+
+        <EditText android:id="@+id/search"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="搜索商户、备注、分类" android:textSize="14sp"
+            android:textColor="@color/text" android:textColorHint="@color/text_sub"
+            android:background="@drawable/bg_card" android:padding="10dp"
+            android:layout_marginTop="12dp"
+            android:inputType="text" android:maxLines="1" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:scrollbars="none" android:padding="12dp">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView android:id="@+id/fAll"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="全部" android:textSize="13sp" android:paddingLeft="14dp"
+                android:paddingRight="14dp" android:paddingTop="7dp" android:paddingBottom="7dp"
+                android:background="@drawable/bg_pill_green" android:textColor="@color/green" />
+            <TextView android:id="@+id/fOut"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="支出" android:textSize="13sp" android:paddingLeft="14dp"
+                android:paddingRight="14dp" android:paddingTop="7dp" android:paddingBottom="7dp"
+                android:background="@drawable/bg_pill_gray" android:textColor="@color/text_sub"
+                android:layout_marginLeft="8dp" android:layout_marginStart="8dp" />
+            <TextView android:id="@+id/fIn"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="收入" android:textSize="13sp" android:paddingLeft="14dp"
+                android:paddingRight="14dp" android:paddingTop="7dp" android:paddingBottom="7dp"
+                android:background="@drawable/bg_pill_gray" android:textColor="@color/text_sub"
+                android:layout_marginLeft="8dp" android:layout_marginStart="8dp" />
+            <TextView android:id="@+id/fVoided"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="含已撤销" android:textSize="13sp" android:paddingLeft="14dp"
+                android:paddingRight="14dp" android:paddingTop="7dp" android:paddingBottom="7dp"
+                android:background="@drawable/bg_pill_gray" android:textColor="@color/text_sub"
+                android:layout_marginLeft="8dp" android:layout_marginStart="8dp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView android:id="@+id/summary"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:textSize="12sp" android:textColor="@color/text_sub"
+        android:paddingLeft="16dp" android:paddingRight="16dp" android:paddingBottom="6dp"
+        android:text="—" />
+
+    <TextView
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="点按条目可编辑　·　长按可删除或做更多操作"
+        android:textSize="11sp" android:textColor="@color/text_sub"
+        android:gravity="center"
+        android:paddingLeft="16dp" android:paddingRight="16dp" android:paddingBottom="8dp" />
+
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1">
+        <ListView android:id="@+id/list"
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:divider="@color/line" android:dividerHeight="1dp"
+            android:background="@color/card" android:paddingBottom="20dp" />
+        <TextView android:id="@+id/empty"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="没有符合条件的流水" android:textColor="@color/text_sub"
+            android:textSize="13sp" android:gravity="center" android:padding="40dp"
+            android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

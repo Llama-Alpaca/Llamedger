@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="14dp" android:paddingRight="14dp"
+    android:paddingTop="11dp" android:paddingBottom="11dp">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/statName"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:textSize="15sp"
+            android:textColor="@color/text" android:text="—" />
+        <TextView android:id="@+id/statPct"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textSize="12sp" android:textColor="@color/text_sub"
+            android:layout_marginRight="10dp" android:layout_marginEnd="10dp" android:text="—" />
+        <TextView android:id="@+id/statAmount"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textSize="15sp" android:textStyle="bold"
+            android:textColor="@color/text" android:text="—" />
+    </LinearLayout>
+
+    <ProgressBar android:id="@+id/statBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent" android:layout_height="5dp"
+        android:max="100" android:progress="0"
+        android:progressDrawable="@drawable/bg_progress"
+        android:layout_marginTop="8dp" />
+</LinearLayout>

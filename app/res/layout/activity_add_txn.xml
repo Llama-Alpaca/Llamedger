@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/bg" android:fillViewport="true">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="记一笔" android:textSize="20sp" android:textStyle="bold"
+            android:textColor="@color/text" android:layout_marginBottom="16dp" />
+
+        <!-- 支出 / 收入 -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:background="@drawable/bg_pill_gray"
+            android:padding="3dp">
+            <TextView android:id="@+id/tabOut"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="支出" android:gravity="center"
+                android:padding="10dp" android:textSize="15sp" android:textColor="@color/white"
+                android:background="@drawable/bg_btn_primary" />
+            <TextView android:id="@+id/tabIn"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="收入" android:gravity="center"
+                android:padding="10dp" android:textSize="15sp" android:textColor="@color/text_sub" />
+        </LinearLayout>
+
+        <!-- 金额 -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical"
+            android:background="@drawable/bg_card" android:padding="16dp"
+            android:layout_marginTop="14dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="¥" android:textSize="26sp" android:textStyle="bold"
+                android:textColor="@color/text" />
+            <EditText android:id="@+id/amount"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:hint="0.00" android:textSize="30sp"
+                android:inputType="numberDecimal" android:textColor="@color/text"
+                android:textColorHint="#FFC8CDD4" android:background="@null"
+                android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <!-- 分类 -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="分类" style="@style/Label" android:layout_marginTop="16dp"
+            android:layout_marginBottom="6dp" />
+        <Spinner android:id="@+id/category"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:background="@drawable/bg_input" android:padding="12dp"
+            android:minHeight="46dp" />
+
+        <!-- 商户 -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="商户 / 对方" style="@style/Label" android:layout_marginTop="14dp"
+            android:layout_marginBottom="6dp" />
+        <EditText android:id="@+id/merchant"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="例如：美团外卖" style="@style/Input" android:inputType="text" />
+
+        <!-- 账户 -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="账户 / 渠道" style="@style/Label" android:layout_marginTop="14dp"
+            android:layout_marginBottom="6dp" />
+        <EditText android:id="@+id/account"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="例如：尾号1234 / 微信" style="@style/Input" android:inputType="text" />
+
+        <!-- 时间 -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="时间" style="@style/Label" android:layout_marginTop="14dp"
+            android:layout_marginBottom="6dp" />
+        <TextView android:id="@+id/time"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:background="@drawable/bg_input" android:padding="12dp"
+            android:textSize="15sp" android:textColor="@color/text" android:text="—" />
+
+        <!-- 备注 -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="备注" style="@style/Label" android:layout_marginTop="14dp"
+            android:layout_marginBottom="6dp" />
+        <EditText android:id="@+id/note"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="可选" style="@style/Input" android:inputType="textMultiLine"
+            android:minLines="2" android:gravity="top" />
+
+        <TextView android:id="@+id/save"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="保存" style="@style/BtnPrimary" android:layout_marginTop="22dp" />
+
+        <TextView android:id="@+id/delete"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="删除这条记录"
+            android:textColor="@color/red" android:textSize="16sp"
+            android:gravity="center" android:padding="14dp"
+            android:background="@drawable/bg_btn_danger"
+            android:visibility="gone"
+            android:layout_marginTop="16dp" />
+
+        <TextView android:id="@+id/cancel"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="取消" style="@style/BtnGhost" android:layout_marginTop="10dp" />
+    </LinearLayout>
+</ScrollView>

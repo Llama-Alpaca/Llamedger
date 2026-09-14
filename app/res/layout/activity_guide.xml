@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/bg" android:fillViewport="true">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="开启自动记账" android:textSize="20sp" android:textStyle="bold"
+            android:textColor="@color/text" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="需要授予两项系统权限，记账助手才能在你付款后自动记录。"
+            android:textSize="13sp" android:textColor="@color/text_sub"
+            android:layout_marginTop="6dp" android:layout_marginBottom="16dp" />
+
+        <!-- 步骤1 -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/bg_card"
+            android:padding="16dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:id="@+id/badge1"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="1" android:textColor="@color/green" android:textSize="14sp"
+                    android:textStyle="bold" android:background="@drawable/bg_pill_green"
+                    android:paddingLeft="9dp" android:paddingRight="9dp"
+                    android:paddingTop="3dp" android:paddingBottom="3dp" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="通知使用权（必开）"
+                    android:textSize="16sp" android:textStyle="bold" android:textColor="@color/text"
+                    android:layout_marginLeft="10dp" android:layout_marginStart="10dp" />
+            </LinearLayout>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="招行 App、微信、支付宝的付款通知都靠它读取。\n路径：设置 → 通知和状态栏 → 通知使用权 → 找到「记账助手」并打开。"
+                android:textSize="13sp" android:textColor="@color/text_sub"
+                android:lineSpacingExtra="3dp" android:layout_marginTop="10dp" />
+            <TextView android:id="@+id/state1"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="当前状态：未开启" android:textSize="13sp"
+                android:textColor="@color/red" android:layout_marginTop="8dp" />
+            <TextView android:id="@+id/btnNotifyAccess"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="去开启通知使用权" style="@style/BtnPrimary"
+                android:layout_marginTop="12dp" />
+        </LinearLayout>
+
+        <!-- 步骤2 -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/bg_card"
+            android:padding="16dp" android:layout_marginTop="12dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:id="@+id/badge2"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="2" android:textColor="@color/green" android:textSize="14sp"
+                    android:textStyle="bold" android:background="@drawable/bg_pill_green"
+                    android:paddingLeft="9dp" android:paddingRight="9dp"
+                    android:paddingTop="3dp" android:paddingBottom="3dp" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="自启动与电池白名单（强烈建议）"
+                    android:textSize="16sp" android:textStyle="bold" android:textColor="@color/text"
+                    android:layout_marginLeft="10dp" android:layout_marginStart="10dp" />
+            </LinearLayout>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="国产系统（华为/小米/OPPO/vivo）默认会清理后台，不加白名单可能收不到通知。"
+                android:textSize="13sp" android:textColor="@color/text_sub"
+                android:lineSpacingExtra="3dp" android:layout_marginTop="10dp" />
+            <TextView android:id="@+id/btnBattery"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="加入电池优化白名单" style="@style/BtnGhost"
+                android:layout_marginTop="12dp" />
+            <TextView android:id="@+id/btnAppSettings"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="打开本应用系统设置" style="@style/BtnGhost"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <!-- 步骤3（可选） -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/bg_card"
+            android:padding="16dp" android:layout_marginTop="12dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="选" android:textColor="@color/text_sub" android:textSize="14sp"
+                    android:textStyle="bold" android:background="@drawable/bg_pill_gray"
+                    android:paddingLeft="9dp" android:paddingRight="9dp"
+                    android:paddingTop="3dp" android:paddingBottom="3dp" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="银行短信兜底（可选）"
+                    android:textSize="16sp" android:textStyle="bold" android:textColor="@color/text"
+                    android:layout_marginLeft="10dp" android:layout_marginStart="10dp" />
+            </LinearLayout>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="万一 App 推送被系统拦截，银行短信还能兜住交易。你的招行走的是 App 通知，所以这项不开也不影响主要功能。"
+                android:textSize="13sp" android:textColor="@color/text_sub"
+                android:lineSpacingExtra="3dp" android:layout_marginTop="10dp" />
+            <TextView android:id="@+id/state3"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="当前状态：未开启" android:textSize="13sp"
+                android:textColor="@color/text_sub" android:layout_marginTop="8dp" />
+            <TextView android:id="@+id/btnSms"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="允许读取银行短信" style="@style/BtnGhost"
+                android:layout_marginTop="12dp" />
+        </LinearLayout>
+
+        <TextView android:id="@+id/done"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="完成" style="@style/BtnPrimary" android:layout_marginTop="20dp" />
+    </LinearLayout>
+</ScrollView>

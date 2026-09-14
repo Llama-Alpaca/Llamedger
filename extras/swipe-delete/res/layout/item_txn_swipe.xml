@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 注意顺序：操作区在前（底层，被内容盖住），内容区在后（上层，滑动时左移露出操作区） -->
+<com.jizhang.assistant.ui.SwipeItemLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/swipeActions"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/red">
+
+        <TextView
+            android:id="@+id/actionDelete"
+            android:layout_width="92dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="删除"
+            android:textColor="#FFFFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:background="?android:attr/selectableItemBackground" />
+    </LinearLayout>
+
+    <include layout="@layout/item_txn" />
+</com.jizhang.assistant.ui.SwipeItemLayout>

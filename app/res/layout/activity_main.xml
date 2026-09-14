@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg">
+
+    <!-- 顶部汇总 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_header"
+        android:paddingLeft="20dp" android:paddingRight="20dp"
+        android:paddingTop="22dp" android:paddingBottom="20dp">
+
+        <TextView
+            android:id="@+id/monthTitle"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textColor="#CCFFFFFF" android:textSize="13sp"
+            android:text="本月支出" />
+
+        <TextView
+            android:id="@+id/monthOut"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textColor="@color/white" android:textSize="34sp"
+            android:textStyle="bold" android:layout_marginTop="6dp"
+            android:text="¥0.00" />
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginTop="14dp">
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="本月收入" android:textColor="#CCFFFFFF" android:textSize="12sp" />
+                <TextView android:id="@+id/monthIn"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="¥0.00" android:textColor="@color/white" android:textSize="17sp"
+                    android:layout_marginTop="3dp" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="本月结余" android:textColor="#CCFFFFFF" android:textSize="12sp" />
+                <TextView android:id="@+id/monthBalance"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="¥0.00" android:textColor="@color/white" android:textSize="17sp"
+                    android:layout_marginTop="3dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="14dp">
+
+            <!-- 运行状态 -->
+            <LinearLayout
+                android:id="@+id/statusCard"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="14dp">
+
+                <View android:id="@+id/statusDot"
+                    android:layout_width="9dp" android:layout_height="9dp"
+                    android:background="@drawable/bg_dot" />
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical"
+                    android:layout_marginLeft="10dp" android:layout_marginStart="10dp">
+                    <TextView android:id="@+id/statusTitle"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="自动记账已开启" android:textSize="15sp"
+                        android:textColor="@color/text" android:textStyle="bold" />
+                    <TextView android:id="@+id/statusSub"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="正在监听招行、微信、支付宝通知" android:textSize="12sp"
+                        android:textColor="@color/text_sub" android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <TextView android:id="@+id/statusAction"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="设置" android:textSize="14sp" android:textColor="@color/green"
+                    android:padding="6dp" />
+            </LinearLayout>
+
+            <!-- 快捷入口 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:layout_marginTop="12dp">
+
+                <LinearLayout android:id="@+id/btnAdd"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical"
+                    android:gravity="center" android:background="@drawable/bg_btn_primary"
+                    android:padding="14dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="＋ 记一笔" android:textColor="@color/white"
+                        android:textSize="16sp" android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout android:id="@+id/btnStats"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical"
+                    android:gravity="center" android:background="@drawable/bg_btn_ghost"
+                    android:padding="14dp" android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="📊 统计" android:textColor="@color/green"
+                        android:textSize="16sp" android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 最近流水 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:layout_marginTop="18dp" android:layout_marginBottom="8dp">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="最近流水" style="@style/SectionTitle" />
+                <TextView android:id="@+id/btnAll"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="查看全部 ›" android:textSize="13sp"
+                    android:textColor="@color/green" android:padding="4dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/recentList"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:background="@drawable/bg_card"
+                android:paddingTop="4dp" android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/emptyHint"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="还没有流水记录。\n开启通知使用权后，招行的消费推送会自动记进来。"
+                android:textColor="@color/text_sub" android:textSize="13sp"
+                android:gravity="center" android:padding="30dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="账本数据仅保存在本机，不会上传到任何服务器。"
+                android:textColor="@color/text_sub" android:textSize="11sp"
+                android:gravity="center" android:padding="16dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

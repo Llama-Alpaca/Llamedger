@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/bg" android:fillViewport="true">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="14dp">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="设置" android:textSize="20sp" android:textStyle="bold"
+            android:textColor="@color/text" android:layout_marginBottom="10dp" />
+
+        <!-- 自动记账 -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="自动记账" style="@style/SectionTitle"
+            android:layout_marginTop="8dp" android:layout_marginBottom="6dp" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/bg_card">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="自动识别记账" android:textSize="15sp" android:textColor="@color/text" />
+                    <TextView android:id="@+id/monitorSub"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="监听招行、微信、支付宝通知" android:textSize="12sp"
+                        android:textColor="@color/text_sub" android:layout_marginTop="2dp" />
+                </LinearLayout>
+                <Switch android:id="@+id/swMonitor"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="@color/line" android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="记账后弹提醒" android:textSize="15sp" android:textColor="@color/text" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="识别到消费或退款时通知我" android:textSize="12sp"
+                        android:textColor="@color/text_sub" android:layout_marginTop="2dp" />
+                </LinearLayout>
+                <Switch android:id="@+id/swNotify"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="@color/line" android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="开机自动启动" android:textSize="15sp" android:textColor="@color/text" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="重启手机后自动恢复后台记账" android:textSize="12sp"
+                        android:textColor="@color/text_sub" android:layout_marginTop="2dp" />
+                </LinearLayout>
+                <Switch android:id="@+id/swAutoStart"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 退款处理 -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="退款 / 退回处理" style="@style/SectionTitle"
+            android:layout_marginTop="16dp" android:layout_marginBottom="6dp" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/bg_card">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="自动移除对应支出" android:textSize="15sp" android:textColor="@color/text" />
+                    <TextView android:id="@+id/autoRemoveSub"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="识别到退款时直接删掉原支出记录" android:textSize="12sp"
+                        android:textColor="@color/text_sub" android:layout_marginTop="2dp" />
+                </LinearLayout>
+                <Switch android:id="@+id/swAutoRemove"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="@color/line" android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="允许部分退款冲减" android:textSize="15sp" android:textColor="@color/text" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="退款金额小于原支出时，只冲减差额" android:textSize="12sp"
+                        android:textColor="@color/text_sub" android:layout_marginTop="2dp" />
+                </LinearLayout>
+                <Switch android:id="@+id/swPartial"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="@color/line" android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp" />
+
+            <LinearLayout android:id="@+id/rowWindow"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp" android:background="?android:attr/selectableItemBackground">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="回溯查找天数" android:textSize="15sp"
+                    android:textColor="@color/text" />
+                <TextView android:id="@+id/tvWindow"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="90 天" android:textSize="14sp" android:textColor="@color/text_sub" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="@color/line" android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp" />
+
+            <LinearLayout android:id="@+id/rowScore"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp" android:background="?android:attr/selectableItemBackground">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="匹配严格度" android:textSize="15sp" android:textColor="@color/text" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="阈值越低越容易自动冲销，也越容易误判" android:textSize="12sp"
+                        android:textColor="@color/text_sub" android:layout_marginTop="2dp" />
+                </LinearLayout>
+                <TextView android:id="@+id/tvScore"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="55" android:textSize="14sp" android:textColor="@color/text_sub" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 权限 -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="权限与后台" style="@style/SectionTitle"
+            android:layout_marginTop="16dp" android:layout_marginBottom="6dp" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/bg_card">
+
+            <LinearLayout android:id="@+id/rowGuide"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp" android:background="?android:attr/selectableItemBackground">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="权限设置引导" android:textSize="15sp"
+                    android:textColor="@color/text" />
+                <TextView android:id="@+id/tvNotifyState"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="›" android:textSize="14sp" android:textColor="@color/text_sub" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="@color/line" android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp" />
+
+            <LinearLayout android:id="@+id/rowBattery"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp" android:background="?android:attr/selectableItemBackground">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="电池优化白名单" android:textSize="15sp" android:textColor="@color/text" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="不加白名单，后台可能被系统杀掉" android:textSize="12sp"
+                        android:textColor="@color/text_sub" android:layout_marginTop="2dp" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="›" android:textSize="14sp" android:textColor="@color/text_sub" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 数据 -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="数据" style="@style/SectionTitle"
+            android:layout_marginTop="16dp" android:layout_marginBottom="6dp" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/bg_card">
+
+            <LinearLayout android:id="@+id/rowOverview"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp" android:background="?android:attr/selectableItemBackground">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="数据概览" android:textSize="15sp"
+                    android:textColor="@color/text" />
+                <TextView android:id="@+id/tvOverview"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="—" android:textSize="13sp" android:textColor="@color/text_sub" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="@color/line" android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp" />
+
+            <LinearLayout android:id="@+id/rowExport"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp" android:background="?android:attr/selectableItemBackground">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="导出账本 CSV" android:textSize="15sp"
+                    android:textColor="@color/text" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="›" android:textSize="14sp" android:textColor="@color/text_sub" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="@color/line" android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp" />
+
+            <LinearLayout android:id="@+id/rowClear"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:padding="14dp" android:background="?android:attr/selectableItemBackground">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="清空所有数据" android:textSize="15sp"
+                    android:textColor="@color/red" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="›" android:textSize="14sp" android:textColor="@color/text_sub" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView android:id="@+id/about"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="记账助手 1.2.2\n数据全部保存在本机，不联网上传"
+            android:textColor="@color/text_sub" android:textSize="11sp"
+            android:gravity="center" android:padding="20dp" />
+    </LinearLayout>
+</ScrollView>
