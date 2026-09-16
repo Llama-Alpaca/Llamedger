@@ -23,12 +23,30 @@ public final class BankParser {
 
     private BankParser() {}
 
-    /** 商户提取：优先级从高到低 */
+    /**
+     * 商户提取：优先级从高到低。
+     *
+     * 之所以把「括号里的名字」放在第一位，是因为招行新模板长这样：
+     *   您账户8888于09月16日10:50在【星巴克】发生快捷支付扣款，人民币35.00
+     * 若用「在…支付」去截，会把「发生快捷」一起吞进商户名（曾经就踩过这个坑）。
+     */
     private static final Pattern[] MERCHANT_PATTERNS = {
+            // 在【星巴克】… / 向（某某）… / 给「某某」…
+            Pattern.compile("(?:在|向|给)\\s*[【（(「『]\\s*([^】）)」』]{1,40}?)\\s*[】）)」』]"),
+            // 商户名称：某某
             Pattern.compile("(?:商户名称|商户|特约商户|收款方|对方户名|收款人)\\s*[:：]\\s*([^,，。;；|]{1,30})"),
-            Pattern.compile("在\\s*([^,，。;；|]{2,24}?)\\s*(?:消费|支付|购买|刷卡|扣款)"),
-            Pattern.compile("(?:向|付给|转给|转至|汇给)\\s*([^,，。;；|]{2,24}?)\\s*(?:付款|支付|转账|汇款|消费)"),
+            // 在 某某 消费 / 支付（排除括号，避免把整段括起来的内容当名字）
+            Pattern.compile("在\\s*([^,，。;；|【】（）()]{2,24}?)\\s*(?:消费|支付|购买|刷卡|扣款)"),
+            // 向 某某 付款 / 转账
+            Pattern.compile("(?:向|付给|转给|转至|汇给)\\s*([^,，。;；|【】（）()]{2,24}?)\\s*(?:付款|支付|转账|汇款|消费)"),
+            // 交易类型 / 摘要 / 用途 / 商品
             Pattern.compile("(?:交易类型|摘要|用途|商品)\\s*[:：]\\s*([^,，。;；|]{1,24})")
+    };
+
+    /** 商户名里不该出现的描述性词语，遇到就从这里截断 */
+    private static final String[] MERCHANT_NOISE = {
+            "发生", "快捷", "消费", "支付", "付款", "扣款", "购买", "刷卡",
+            "转账", "汇款", "交易", "支出", "收入"
     };
 
     /** 账号尾号提取 */
@@ -110,6 +128,11 @@ public final class BankParser {
             for (String b : Lexicon.BANK_PKGS) {
                 if (pkg.equals(b)) return true;
             }
+            // 模糊匹配：银行 App 包名常随版本变化，只认精确名单会大量漏记
+            String lower = pkg.toLowerCase();
+            for (String h : Lexicon.BANK_PKG_HINTS) {
+                if (lower.contains(h)) return true;
+            }
         }
         return Lexicon.isBankSender(sender);
     }
@@ -154,6 +177,16 @@ public final class BankParser {
         for (String t : COMMON_TITLES) {
             if (v.equals(t)) return "";
         }
+        // 去掉可能残留的成对括号
+        v = v.replaceAll("^[【（(「『\\[]+", "").replaceAll("[】）)」』\\]]+$", "").trim();
+        if (v.length() == 0) return "";
+        // 从描述性词语处截断：「星巴克发生快捷」-> 「星巴克」
+        int cut = -1;
+        for (String n : MERCHANT_NOISE) {
+            int i = v.indexOf(n);
+            if (i > 0 && (cut < 0 || i < cut)) cut = i;
+        }
+        if (cut > 0) v = v.substring(0, cut).trim();
         return v;
     }
 }

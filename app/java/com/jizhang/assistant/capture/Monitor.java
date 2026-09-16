@@ -26,6 +26,21 @@ public final class Monitor {
     /** 单线程串行处理，保证同一笔不会被并发重复入账 */
     private static final ExecutorService EXEC = Executors.newSingleThreadExecutor();
 
+    /**
+     * 记录一条通知的来源（只存包名和标题，不存正文，降低隐私风险）。
+     * 目的是：即使这条通知因为包名不认识被过滤掉，也能在诊断界面看到它来过。
+     */
+    public static void recordSource(Context ctx, String pkg, String title, boolean watched) {
+        try {
+            SqliteStore store = App.db();
+            if (store != null) {
+                store.recordNotifySource(System.currentTimeMillis(), pkg, title, watched);
+            }
+        } catch (Throwable t) {
+            Log.w(TAG, "记录通知来源失败", t);
+        }
+    }
+
     public static void handleAsync(final Context ctx, final RawEvent e) {
         EXEC.execute(new Runnable() {
             public void run() {

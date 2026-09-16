@@ -28,6 +28,12 @@ public class CoreTest {
         testWithdrawNoAmountNotRecorded();
         testInternalTransferPairing();
         testTransferNotRefundable();
+        testCmbQuickPayRealTemplate();
+        testCmbQuickPayIntegerAmount();
+        testCmbQuickPayCreatesTxn();
+        testUnknownBankPackageFallsBackToText();
+        testBankPackageFuzzyMatch();
+        testUnrelatedNotificationNotWatched();
         // ---- 用户实际通知原文回归 ----
         testWechatGroupedNotificationTrap();
         testRealWithdrawFlowNoAmountInWechat();
@@ -313,6 +319,89 @@ public class CoreTest {
                 !txn.isTransfer && txn.direction == Txn.DIR_IN
                         && txn.amountCents == 50000,
                 "txn=" + txn);
+    }
+
+    // ------------------------------------------ 招行「快捷支付扣款」新模板
+
+    /**
+     * 用户实际收到的招行消费通知模板：
+     *   您账户8888于09月16日10:50在【星巴克】发生快捷支付扣款，人民币35.00
+     *
+     * 这个模板有两个坑：
+     *   1. 商户名被方括号包住，且后面跟了「发生快捷」等描述词
+     *   2. 金额只有「人民币」前缀，既没有「元」也没有小数（金额可能写成 35）
+     */
+    static void testCmbQuickPayRealTemplate() {
+        RawEvent e = bank("账户变动通知",
+                "您账户8888于" + stamp(now()) + "在【星巴克】发生快捷支付扣款，人民币35.00",
+                now());
+        ParseResult r = EventParser.parse(e);
+        check("招行新模板-快捷支付扣款能识别",
+                r.success && r.amountCents == 3500
+                        && r.direction == Txn.DIR_OUT
+                        && "星巴克".equals(r.merchant)
+                        && "8888".equals(r.account),
+                r.toString());
+    }
+
+    /** 金额不带「元」也不带小数（只有人民币前缀）时同样要能识别 */
+    static void testCmbQuickPayIntegerAmount() {
+        RawEvent e = bank("账户变动通知",
+                "您账户8888于" + stamp(now()) + "在【京东商城】发生快捷支付扣款，人民币299",
+                now());
+        ParseResult r = EventParser.parse(e);
+        check("招行新模板-整数金额无「元」也能识别",
+                r.success && r.amountCents == 29900 && "京东商城".equals(r.merchant),
+                r.toString());
+    }
+
+    /** 走完整入账流程，确认真的会生成一条流水 */
+    static void testCmbQuickPayCreatesTxn() {
+        MemoryStore store = new MemoryStore();
+        IngestEngine.Result res = IngestEngine.ingest(
+                bank("账户变动通知",
+                        "您账户8888于" + stamp(now()) + "在【美团外卖】发生快捷支付扣款，人民币35.50",
+                        now()),
+                store, RefundEngine.Policy.defaults());
+        boolean ok = res.stored && store.txns.size() == 1;
+        Txn t = ok ? store.txns.get(0) : null;
+        check("招行新模板-完整流程确实入账",
+                ok && t.amountCents == 3550 && t.direction == Txn.DIR_OUT
+                        && "美团外卖".equals(t.merchant) && "餐饮".equals(t.category),
+                "res=" + res + " 条数=" + store.txns.size()
+                        + (t == null ? "" : " txn=" + t));
+    }
+
+    // ------------------------------------------ 包名不认识时的文本兜底
+
+    /**
+     * 关键回归：银行 App 改了包名（不在白名单里）时，
+     * 必须靠通知内容判断出来，否则整类消费都会「完全没有记录」。
+     */
+    static void testUnknownBankPackageFallsBackToText() {
+        String unknownPkg = "com.some.unknown.bankapp.v9";
+        String text = "您账户8888于09月16日10:50在【星巴克】发生快捷支付扣款，人民币35.00";
+        boolean watched = EventParser.isWatchedPkg(unknownPkg, text);
+        check("包名不认识时-靠文本兜底识别为银行通知", watched,
+                "pkg=" + unknownPkg + " watched=" + watched);
+    }
+
+    /** 已知银行包名的模糊匹配（招行包名有多种写法） */
+    static void testBankPackageFuzzyMatch() {
+        boolean a = EventParser.isWatchedPkg("cmb.pb", "");
+        boolean b = EventParser.isWatchedPkg("com.cmbchina.ccd.pluto.cmbActivity", "");
+        boolean c = EventParser.isWatchedPkg("cn.com.cmb.something.new", "");
+        check("银行包名模糊匹配-cmb 各种写法都认",
+                a && b && c, "a=" + a + " b=" + b + " c=" + c);
+    }
+
+    /** 反向：不相干的应用发普通通知时不能被误判 */
+    static void testUnrelatedNotificationNotWatched() {
+        boolean a = EventParser.isWatchedPkg("com.tencent.mobileqq", "张三：今晚一起吃饭吗");
+        boolean b = EventParser.isWatchedPkg("com.taobao.taobao", "您关注的商品降价了，仅需100元");
+        boolean c = EventParser.isWatchedPkg("com.android.settings", "WLAN 已连接");
+        check("不相干通知不会被误判", !a && !b && !c,
+                "qq=" + a + " 淘宝=" + b + " 设置=" + c);
     }
 
     static RawEvent bank(String title, String body, long at) {

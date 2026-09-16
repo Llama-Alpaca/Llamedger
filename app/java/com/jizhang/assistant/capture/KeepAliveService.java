@@ -19,12 +19,21 @@ import com.jizhang.assistant.util.Prefs;
 public class KeepAliveService extends Service {
 
     private static final String TAG = "JZKeepAlive";
+
+    /** 常驻服务是否在运行（诊断界面用） */
+    public static volatile boolean running = false;
     public static final String ACTION_START = "com.jizhang.assistant.START";
     public static final String ACTION_STOP = "com.jizhang.assistant.STOP";
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        running = false;
+        super.onDestroy();
     }
 
     @Override
@@ -43,6 +52,7 @@ public class KeepAliveService extends Service {
 
         try {
             startForeground(Notifier.ID_KEEPALIVE, Notifier.keepAlive(this, text));
+            running = true;
         } catch (Throwable t) {
             Log.e(TAG, "启动前台服务失败", t);
         }

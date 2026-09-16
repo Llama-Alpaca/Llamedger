@@ -95,6 +95,37 @@ public final class Lexicon {
             "com.unionpay"                             // 云闪付
     };
 
+    /**
+     * 包名「特征片段」—— 命中任意一个就当做银行类 App。
+     *
+     * 为什么需要它：各家银行 App 的包名经常随版本变化（招商银行就至少有 cmb.pb、
+     * com.cmbchina.* 等多种写法），靠精确匹配的名单极容易漏。这里改成模糊匹配，
+     * 只要包名里带银行特征片段就认。
+     */
+    public static final String[] BANK_PKG_HINTS = {
+            "cmb", "icbc", "ccb", "abchina", "boc", "bocom", "psbc", "spdb",
+            "cib", "cebbank", "citic", "cmbc", "hxb", "cgb", "nbcb", "bank",
+            "unionpay", "pingan", "sdb", "hsbank", "czbank", "hzbank", "bjbank"
+    };
+
+    /** 支付类 App 的包名特征片段 */
+    public static final String[] PAY_PKG_HINTS = {
+            "tencent.mm", "alipay", "tenpay", "wechat", "wxpay", "unionpay"
+    };
+
+    /** 银行交易通知的文本特征（包名认不出时用来兜底判断） */
+    public static final String[] BANK_TEXT_MARKERS = {
+            "账户", "账号", "尾号", "卡号", "储蓄卡", "信用卡", "一卡通",
+            "人民币", "余额", "快捷支付", "网银", "手机银行", "活期"
+    };
+
+    /** 交易行为词（用于判断这段文字是不是一笔交易） */
+    public static final String[] TXN_TEXT_MARKERS = {
+            "支出", "消费", "支付", "付款", "扣款", "扣费", "转出", "取出", "取现",
+            "收入", "入账", "转入", "存入", "收款", "到账", "退款", "退回",
+            "提现", "充值", "还款", "缴费", "代扣", "汇入", "汇出"
+    };
+
     /** 支付类 App 包名 */
     public static final String[] PAY_PKGS = {
             "com.tencent.mm",                          // 微信

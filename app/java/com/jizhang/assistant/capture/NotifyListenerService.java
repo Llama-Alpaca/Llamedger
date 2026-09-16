@@ -22,10 +22,21 @@ public class NotifyListenerService extends NotificationListenerService {
 
     private static final String TAG = "JZNotify";
 
+    /** 监听服务是否处于连接状态（诊断界面用） */
+    public static volatile boolean connected = false;
+
     @Override
     public void onListenerConnected() {
         super.onListenerConnected();
+        connected = true;
         Log.i(TAG, "通知监听已连接");
+    }
+
+    @Override
+    public void onListenerDisconnected() {
+        super.onListenerDisconnected();
+        connected = false;
+        Log.w(TAG, "通知监听已断开");
     }
 
     @Override
@@ -43,7 +54,6 @@ public class NotifyListenerService extends NotificationListenerService {
         if (pkg == null) return;
         // 忽略自己发的通知
         if (pkg.equals(getPackageName())) return;
-        if (!isWatched(pkg)) return;
 
         Notification n = sbn.getNotification();
         if (n == null) return;
@@ -53,6 +63,16 @@ public class NotifyListenerService extends NotificationListenerService {
         String title = text(ex, Notification.EXTRA_TITLE);
         String body = pickBody(ex);
         if ((title == null || title.length() == 0) && (body == null || body.length() == 0)) {
+            return;
+        }
+
+        // 判断是否关心这条通知：精确名单 -> 模糊包名特征 -> 文本兜底。
+        // 以前这里不匹配就直接 return 且不留记录，一旦银行 App 改了包名，
+        // 就会表现为「消费完全没有记录」，而且完全无从排查。
+        boolean watched = EventParser.isWatchedPkg(pkg, title + " " + body);
+        Monitor.recordSource(this, pkg, title, watched);
+        if (!watched) {
+            Log.i(TAG, "未识别的通知来源，已忽略: " + pkg);
             return;
         }
 
@@ -96,13 +116,6 @@ public class NotifyListenerService extends NotificationListenerService {
     private static String text(Bundle ex, String key) {
         CharSequence cs = ex.getCharSequence(key);
         return cs == null ? null : cs.toString();
-    }
-
-    /** 是否为我们关心的来源 */
-    private static boolean isWatched(String pkg) {
-        for (String p : Lexicon.BANK_PKGS) if (p.equals(pkg)) return true;
-        for (String p : Lexicon.PAY_PKGS) if (p.equals(pkg)) return true;
-        return false;
     }
 
     /** 供界面显示：当前是否已获得通知使用权 */

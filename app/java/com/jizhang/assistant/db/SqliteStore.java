@@ -360,6 +360,57 @@ public class SqliteStore implements TxnStore {
         }
     }
 
+    // ---------------- 通知来源（诊断用）----------------
+
+    private static final int SOURCE_KEEP = 300;
+
+    /** 记录一条通知来源，只存包名与标题，并自动清理旧记录 */
+    public synchronized void recordNotifySource(long at, String pkg, String title, boolean watched) {
+        try {
+            ContentValues v = new ContentValues();
+            v.put("at", at);
+            v.put("pkg", pkg);
+            v.put("title", title);
+            v.put("watched", watched ? 1 : 0);
+            SQLiteDatabase db = w();
+            db.insert("notify_src", null, v);
+            // 只保留最近若干条，避免无限增长
+            db.execSQL("DELETE FROM notify_src WHERE id NOT IN "
+                    + "(SELECT id FROM notify_src ORDER BY id DESC LIMIT " + SOURCE_KEEP + ")");
+        } catch (Throwable e) {
+            android.util.Log.w("JZStore", "记录通知来源失败", e);
+        }
+    }
+
+    /** 最近的通知来源（时间倒序）*/
+    public java.util.List<Object[]> recentNotifySources(int limit) {
+        java.util.List<Object[]> out = new java.util.ArrayList<Object[]>();
+        Cursor c;
+        try {
+            c = r().rawQuery("SELECT at, pkg, title, watched FROM notify_src "
+                    + "ORDER BY id DESC LIMIT ?", new String[]{String.valueOf(limit)});
+        } catch (Throwable e) {
+            return out;
+        }
+        try {
+            while (c.moveToNext()) {
+                out.add(new Object[]{c.getLong(0), c.getString(1),
+                        c.getString(2), c.getInt(3) == 1});
+            }
+        } finally {
+            c.close();
+        }
+        return out;
+    }
+
+    /** 清空通知来源记录 */
+    public synchronized void clearNotifySources() {
+        try {
+            w().delete("notify_src", null, null);
+        } catch (Throwable ignored) {
+        }
+    }
+
     public boolean getBool(String key, boolean def) {
         return "1".equals(getSetting(key, def ? "1" : "0"));
     }

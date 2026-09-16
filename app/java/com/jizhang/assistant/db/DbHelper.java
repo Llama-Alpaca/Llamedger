@@ -21,8 +21,9 @@ public class DbHelper extends SQLiteOpenHelper {
      * v1 初始版本
      * v2 增加内部转账字段（is_transfer / pair_txn_id）
      * v3 增加转账线索表（应对「提现已到账」这类不带金额的通知）
+     * v4 增加通知来源表（诊断用：即使通知被过滤也能看到它来过、来自哪个包名）
      */
-    public static final int DB_VERSION = 3;
+    public static final int DB_VERSION = 4;
 
     public DbHelper(Context ctx) {
         super(ctx, DB_NAME, null, DB_VERSION);
@@ -89,6 +90,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 + "v TEXT)");
 
         createHintTable(db);
+        createSourceTable(db);
 
         seedCategories(db);
     }
@@ -115,6 +117,25 @@ public class DbHelper extends SQLiteOpenHelper {
         if (oldV < 3) {
             createHintTable(db);
         }
+        // v4：通知来源表
+        if (oldV < 4) {
+            createSourceTable(db);
+        }
+    }
+
+    /**
+     * 通知来源表。
+     * 只记录「时间 + 包名 + 标题 + 是否被识别」，不记录通知正文，
+     * 用于排查「通知到底有没有到达」这类问题。
+     */
+    private static void createSourceTable(SQLiteDatabase db) {
+        safeExec(db, "CREATE TABLE IF NOT EXISTS notify_src ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "at INTEGER NOT NULL,"
+                + "pkg TEXT,"
+                + "title TEXT,"
+                + "watched INTEGER NOT NULL DEFAULT 0)");
+        safeExec(db, "CREATE INDEX IF NOT EXISTS idx_src_at ON notify_src(at)");
     }
 
     private static void createHintTable(SQLiteDatabase db) {

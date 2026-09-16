@@ -99,6 +99,11 @@ public class SettingsActivity extends Activity {
                 startActivity(new Intent(SettingsActivity.this, PermissionGuideActivity.class));
             }
         });
+        findViewById(R.id.rowDiagnose).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, DiagnoseActivity.class));
+            }
+        });
         findViewById(R.id.rowBattery).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) { Ui.requestIgnoreBattery(SettingsActivity.this); }
         });

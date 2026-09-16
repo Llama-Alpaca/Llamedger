@@ -46,7 +46,7 @@ cur.execute("""INSERT INTO txn(occurred_at, amount_cents, direction, merchant, c
                       1756000000000, 1756000000000)""")
 con.commit()
 before = cur.execute("SELECT COUNT(*), SUM(amount_cents) FROM txn").fetchone()
-print("升级前：%d 条流水，金额合计 %d 分" % before)
+print("升级前(v1)：%d 条流水，金额合计 %d 分" % before)
 
 # ---------- 复刻 onUpgrade(oldV=1, newV=3) ----------
 def has_column(table, col):
@@ -65,6 +65,11 @@ cur.execute("""CREATE TABLE IF NOT EXISTS transfer_hint (
   id INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER NOT NULL, channel TEXT, note TEXT,
   consumed INTEGER NOT NULL DEFAULT 0)""")
 cur.execute("CREATE INDEX IF NOT EXISTS idx_hint_at ON transfer_hint(at)")
+# v4：通知来源表
+cur.execute("""CREATE TABLE IF NOT EXISTS notify_src (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER NOT NULL, pkg TEXT, title TEXT,
+  watched INTEGER NOT NULL DEFAULT 0)""")
+cur.execute("CREATE INDEX IF NOT EXISTS idx_src_at ON notify_src(at)")
 con.commit()
 
 after = cur.execute("SELECT COUNT(*), SUM(amount_cents) FROM txn").fetchone()
@@ -83,6 +88,8 @@ if "is_transfer" not in cols or "pair_txn_id" not in cols:
     print("  [!] 新列缺失"); ok = False
 if "transfer_hint" not in tables:
     print("  [!] transfer_hint 表缺失"); ok = False
+if "notify_src" not in tables:
+    print("  [!] notify_src 表缺失"); ok = False
 # 旧数据默认值应为 0（非转账）
 n = cur.execute("SELECT COUNT(*) FROM txn WHERE is_transfer=0 AND pair_txn_id=0").fetchone()[0]
 if n != after[0]:
@@ -92,6 +99,7 @@ if n != after[0]:
 try:
     add_column_if_missing("txn", "is_transfer", "ALTER TABLE txn ADD COLUMN is_transfer INTEGER NOT NULL DEFAULT 0")
     cur.execute("CREATE TABLE IF NOT EXISTS transfer_hint (id INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER NOT NULL, channel TEXT, note TEXT, consumed INTEGER NOT NULL DEFAULT 0)")
+    cur.execute("CREATE TABLE IF NOT EXISTS notify_src (id INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER NOT NULL, pkg TEXT, title TEXT, watched INTEGER NOT NULL DEFAULT 0)")
     print("重复升级：安全（幂等）")
 except Exception as e:
     print("  [!] 重复升级报错:", e); ok = False

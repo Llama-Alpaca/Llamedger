@@ -173,6 +173,7 @@ scenes = {
     "ui/StatsActivity.java": ["activity_stats", "item_stat"],
     "ui/SettingsActivity.java": ["activity_settings"],
     "ui/PermissionGuideActivity.java": ["activity_guide"],
+    "ui/DiagnoseActivity.java": ["activity_diagnose", "item_source"],
 }
 bad = 0
 for rel, layouts in scenes.items():
