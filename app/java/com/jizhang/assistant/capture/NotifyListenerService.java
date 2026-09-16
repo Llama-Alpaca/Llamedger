@@ -66,13 +66,28 @@ public class NotifyListenerService extends NotificationListenerService {
             return;
         }
 
-        // 判断是否关心这条通知：精确名单 -> 模糊包名特征 -> 文本兜底。
-        // 以前这里不匹配就直接 return 且不留记录，一旦银行 App 改了包名，
-        // 就会表现为「消费完全没有记录」，而且完全无从排查。
-        boolean watched = EventParser.isWatchedPkg(pkg, title + " " + body);
-        Monitor.recordSource(this, pkg, title, watched);
-        if (!watched) {
-            Log.i(TAG, "未识别的通知来源，已忽略: " + pkg);
+        String text = (title == null ? "" : title) + " " + (body == null ? "" : body);
+
+        // 按来源类型决定处理策略（隐私优先）：
+        //   银行类 App  -> 全部留下（都是账务通知）
+        //   支付类 App  -> 只有「像支付通知」的才留，私聊消息直接丢弃
+        //   未知包名    -> 严格文本判断（金额 + 银行特征 + 交易行为）
+        boolean isBank = BankParser.isBankSource(null, pkg);
+        boolean isPay = EventParser.isPayPkg(pkg);
+        boolean store;
+        if (isBank) {
+            store = true;
+        } else if (isPay) {
+            store = EventParser.looksLikePaymentNotification(text);
+        } else {
+            store = EventParser.looksLikeBankTransaction(text);
+        }
+
+        // 诊断记录：只有真的要处理的通知才连标题一起记，
+        // 其余只留包名与时间 —— 微信的标题就是联系人名字，不能存。
+        Monitor.recordSource(this, pkg, store ? title : null, store);
+        if (!store) {
+            Log.i(TAG, "非账务通知已忽略: " + pkg);
             return;
         }
 
@@ -84,7 +99,9 @@ public class NotifyListenerService extends NotificationListenerService {
         e.receivedAt = sbn.getPostTime() > 0 ? sbn.getPostTime() : System.currentTimeMillis();
         e.dedupeKey = sbn.getKey() + "#" + sbn.getPostTime();
 
-        Log.i(TAG, "捕获通知 [" + pkg + "] " + title + " | " + body);
+        // 不打印正文：日志可能被 root 或 adb 读取
+        Log.i(TAG, "捕获账务通知 [" + pkg + "] 正文长度="
+                + (body == null ? 0 : body.length()));
         Monitor.handleAsync(this, e);
     }
 

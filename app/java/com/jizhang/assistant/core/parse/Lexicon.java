@@ -113,6 +113,18 @@ public final class Lexicon {
             "tencent.mm", "alipay", "tenpay", "wechat", "wxpay", "unionpay"
     };
 
+    /**
+     * 支付类 App 的通知特征词。
+     *
+     * 为什么要单独区分：微信/支付宝是「监听包名」，如果不过滤，
+     * 私聊消息的正文也会被当成账务通知存下来（隐私问题）。
+     * 只有同时出现「金额」和这些词，才认为是支付通知。
+     */
+    public static final String[] PAY_TEXT_MARKERS = {
+            "支付", "付款", "收款", "退款", "转账", "提现", "到账",
+            "已付", "已收", "扣款", "消费", "交易", "账单"
+    };
+
     /** 银行交易通知的文本特征（包名认不出时用来兜底判断） */
     public static final String[] BANK_TEXT_MARKERS = {
             "账户", "账号", "尾号", "卡号", "储蓄卡", "信用卡", "一卡通",

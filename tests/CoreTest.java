@@ -34,6 +34,10 @@ public class CoreTest {
         testUnknownBankPackageFallsBackToText();
         testBankPackageFuzzyMatch();
         testUnrelatedNotificationNotWatched();
+        testWechatChatNotStored();
+        testWechatPaymentStillStored();
+        testAlipayPaymentStillStored();
+        testWithdrawHintStillStored();
         // ---- 用户实际通知原文回归 ----
         testWechatGroupedNotificationTrap();
         testRealWithdrawFlowNoAmountInWechat();
@@ -402,6 +406,48 @@ public class CoreTest {
         boolean c = EventParser.isWatchedPkg("com.android.settings", "WLAN 已连接");
         check("不相干通知不会被误判", !a && !b && !c,
                 "qq=" + a + " 淘宝=" + b + " 设置=" + c);
+    }
+
+    // ------------------------------------------ 隐私：只留账务通知
+
+    /**
+     * 关键隐私回归：微信是「监听包名」，但私聊消息绝不能被当成账务通知存下来。
+     * （微信通知的标题就是联系人名字，正文是聊天内容。）
+     */
+    static void testWechatChatNotStored() {
+        boolean a = EventParser.looksLikePaymentNotification("李四 明天下午三点开会");
+        boolean b = EventParser.looksLikePaymentNotification("家庭群 妈：记得买酱油");
+        boolean c = EventParser.looksLikePaymentNotification("张三 [图片]");
+        boolean d = EventParser.looksLikePaymentNotification("王五 我到家了");
+        check("隐私-微信私聊消息不被当作账务通知",
+                !a && !b && !c && !d,
+                "a=" + a + " b=" + b + " c=" + c + " d=" + d);
+    }
+
+    /** 但真正的微信支付通知必须留下 */
+    static void testWechatPaymentStillStored() {
+        boolean a = EventParser.looksLikePaymentNotification("已支付¥25.50");
+        boolean b = EventParser.looksLikePaymentNotification("支付成功 100.00元");
+        boolean c = EventParser.looksLikePaymentNotification("微信支付 已支付 ¥35.00");
+        check("隐私-微信支付通知仍然保留", a && b && c,
+                "a=" + a + " b=" + b + " c=" + c);
+    }
+
+    /** 支付宝同理 */
+    static void testAlipayPaymentStillStored() {
+        boolean a = EventParser.looksLikePaymentNotification("支付成功 100.00元");
+        boolean b = EventParser.looksLikePaymentNotification("退款到账 ￥100.00");
+        boolean c = EventParser.looksLikePaymentNotification("支付宝 你有一笔 35.50 元的支出");
+        check("隐私-支付宝支付通知仍然保留", a && b && c,
+                "a=" + a + " b=" + b + " c=" + c);
+    }
+
+    /** 提现通知可能不带金额，但必须留下（转账线索要用） */
+    static void testWithdrawHintStillStored() {
+        boolean a = EventParser.looksLikePaymentNotification("零钱提现已到账");
+        boolean b = EventParser.looksLikePaymentNotification("微信支付 零钱提现成功");
+        check("隐私-不帶金额的提现通知仍然保留（转账线索要用）", a && b,
+                "a=" + a + " b=" + b);
     }
 
     static RawEvent bank(String title, String body, long at) {

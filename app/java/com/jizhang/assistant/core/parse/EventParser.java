@@ -58,6 +58,24 @@ public final class EventParser {
                 && Lexicon.containsAny(s, Lexicon.TXN_TEXT_MARKERS);
     }
 
+    /**
+     * 这段文字看起来像不像一条「支付通知」？
+     *
+     * 用于微信/支付宝这类支付 App：它们是监听对象，但日常聊天消息也会走同一个包名。
+     * 如果不过滤，私聊正文就会被当成账务通知存下来 —— 这是隐私问题，必须挡住。
+     *
+     * 判定：含提现/充值类关键词（这类可能不带金额），或「有金额 + 有支付行为词」。
+     */
+    public static boolean looksLikePaymentNotification(String text) {
+        if (text == null) return false;
+        String s = Lexicon.normalize(text);
+        if (s.length() < 4) return false;
+        // 提现/充值通知可能不带金额，但需要留作转账线索
+        if (Lexicon.containsAny(s, Lexicon.INTERNAL_TRANSFER_WORDS)) return true;
+        if (AmountParser.parseAbsCents(s) == null) return false;
+        return Lexicon.containsAny(s, Lexicon.PAY_TEXT_MARKERS);
+    }
+
     /** 包名是否属于我们关心的来源：精确名单 → 模糊特征 → 文本兜底 */
     public static boolean isWatchedPkg(String pkg, String text) {
         if (pkg == null) return false;

@@ -433,6 +433,10 @@ public class SqliteStore implements TxnStore {
         db.delete("txn", null, null);
         db.delete("refund_link", null, null);
         db.delete("raw_event", null, null);
+        try {
+            db.delete("notify_src", null, null);
+        } catch (Throwable ignored) {
+        }
     }
 
     // ------------------------------------------------------------ 分类
