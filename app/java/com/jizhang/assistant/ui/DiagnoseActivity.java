@@ -32,7 +32,7 @@ public class DiagnoseActivity extends Activity {
 
     private SqliteStore store;
     private LinearLayout statusBox, srcList;
-    private TextView empty;
+    private TextView empty, connHint, btnReconnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,12 @@ public class DiagnoseActivity extends Activity {
         statusBox = (LinearLayout) findViewById(R.id.statusBox);
         srcList = (LinearLayout) findViewById(R.id.srcList);
         empty = (TextView) findViewById(R.id.empty);
+        connHint = (TextView) findViewById(R.id.connHint);
+        btnReconnect = (TextView) findViewById(R.id.btnReconnect);
+
+        btnReconnect.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { tryReconnect(); }
+        });
 
         findViewById(R.id.btnRefresh).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -77,6 +83,26 @@ public class DiagnoseActivity extends Activity {
         renderSources();
     }
 
+    /**
+     * 尝试恢复监听服务。
+     * 已授权但未连接时，先请系统重新绑定；仍不行就引导用户去系统设置里关掉再打开。
+     */
+    private void tryReconnect() {
+        if (!NotifyListenerService.isEnabled(this)) {
+            Ui.openNotificationAccess(this);
+            return;
+        }
+        boolean ok = NotifyListenerService.requestReconnect(this);
+        Ui.toast(this, ok ? "已请求系统重新连接，请稍候查看「监听服务连接」"
+                : "请求失败，请到系统设置里关掉通知使用权再重新打开");
+        // 系统重新绑定需要一点时间，1.5 秒后自动复查一次
+        statusBox.postDelayed(new Runnable() {
+            public void run() {
+                renderStatus();
+            }
+        }, 1500);
+    }
+
     // ------------------------------------------------------------ 权限与开关
 
     private void renderStatus() {
@@ -90,6 +116,21 @@ public class DiagnoseActivity extends Activity {
         addRow("监听服务连接", connected, "已连接", "未连接（可能被系统回收，打开一次应用即可）", false);
         addRow("自动记账总开关", monitor, "已开启", "已关闭 —— 到设置里打开", false);
         addRow("后台常驻服务", keep, "运行中", "未运行", false);
+
+        // 监听服务未连接时，给出可操作的处置指引
+        if (access && !connected) {
+            connHint.setVisibility(View.VISIBLE);
+            connHint.setText("监听服务未连接 —— 这是「消费完全没有记录」的直接原因。\n"
+                    + "按顺序试：\n"
+                    + "1) 点下方按钮请求系统重新连接\n"
+                    + "2) 进系统设置 → 通知使用权，把「Llamedger」关掉再打开\n"
+                    + "3) 重启手机\n"
+                    + "注意：应用每次更新后，部分手机系统的通知使用权会被重置，需要重新确认一次。");
+            btnReconnect.setVisibility(View.VISIBLE);
+        } else {
+            connHint.setVisibility(View.GONE);
+            btnReconnect.setVisibility(View.GONE);
+        }
     }
 
     private void addRow(String name, boolean ok, String okText, String badText,

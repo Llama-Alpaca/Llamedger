@@ -41,8 +41,8 @@ APKSIGNER_JAR = os.path.join(BT, "lib", "apksigner.jar")
 
 MIN_SDK = "23"
 TARGET_SDK = "33"
-VERSION_CODE = "7"
-VERSION_NAME = "1.3.1"
+VERSION_CODE = "8"
+VERSION_NAME = "1.3.2"
 
 KEYSTORE = os.path.join(ROOT, "debug.keystore")
 KS_PASS = "android"

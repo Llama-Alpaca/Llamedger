@@ -118,6 +118,36 @@ public class NotifyListenerService extends NotificationListenerService {
         return cs == null ? null : cs.toString();
     }
 
+    /**
+     * 请求系统重新绑定监听服务。
+     *
+     * 适用场景：通知使用权明明是开着的，但服务处于「未连接」状态
+     *（系统回收进程、ROM 更新、应用重装后都可能出现）。
+     * 这是官方 API，比让用户手动去系统设置里关掉再打开更省事。
+     *
+     * @return 是否成功发出请求
+     */
+    public static boolean requestReconnect(android.content.Context c) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return false;   // API 24 才有
+        try {
+            requestRebind(new android.content.ComponentName(c, NotifyListenerService.class));
+            return true;
+        } catch (Throwable t) {
+            Log.e(TAG, "请求重新绑定失败", t);
+            return false;
+        }
+    }
+
+    /**
+     * 尝试唤醒监听服务：若已授权但未连接，就请求系统重新绑定。
+     * 在打开应用时调用，起到自愈作用。
+     */
+    public static void ensureConnected(android.content.Context c) {
+        if (connected) return;
+        if (!isEnabled(c)) return;
+        requestReconnect(c);
+    }
+
     /** 供界面显示：当前是否已获得通知使用权 */
     public static boolean isEnabled(android.content.Context c) {
         try {

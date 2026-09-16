@@ -29,6 +29,19 @@
                 android:orientation="vertical" android:background="@drawable/bg_card"
                 android:paddingTop="4dp" android:paddingBottom="4dp" />
 
+            <TextView android:id="@+id/connHint"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:textColor="@color/red" android:textSize="12sp"
+                android:lineSpacingExtra="4dp"
+                android:background="@drawable/bg_pill_red" android:padding="12dp"
+                android:layout_marginTop="10dp" android:visibility="gone" />
+
+            <TextView android:id="@+id/btnReconnect"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="尝试重新连接监听服务"
+                style="@style/BtnGhost" android:layout_marginTop="8dp"
+                android:visibility="gone" />
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="horizontal" android:gravity="center_vertical"
                 android:layout_marginTop="16dp" android:layout_marginBottom="6dp">

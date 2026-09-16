@@ -86,6 +86,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        // 自愈：已授权但服务未连接时，请求系统重新绑定
+        if (Prefs.monitorEnabled(store)) {
+            NotifyListenerService.ensureConnected(this);
+        }
         refresh();
         // 自动记账开着就保活
         if (Prefs.monitorEnabled(store)) {
