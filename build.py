@@ -79,7 +79,7 @@ def check_env():
 
 def collect_sources():
     srcs = []
-    for base, _dirs, files in os.walk(os.path.join(APP, "java")):
+    for base, _dirs, files in os.walk(os.path.join(APP, "src", "main", "java")):
         for f in files:
             if f.endswith(".java"):
                 srcs.append(os.path.join(base, f))
@@ -111,7 +111,7 @@ def build(clean=False):
 
     # 1. 编译资源
     log("== 1/6 编译资源 ==")
-    run([AAPT2, "compile", "--dir", os.path.join(APP, "res"), "-o", res_zip])
+    run([AAPT2, "compile", "--dir", os.path.join(APP, "src", "main", "res"), "-o", res_zip])
 
     # 2. 链接资源 + 生成 R.java
     log("== 2/6 链接资源 ==")
@@ -119,7 +119,7 @@ def build(clean=False):
     run([AAPT2, "link",
          "-o", base_apk,
          "-I", ANDROID_JAR,
-         "--manifest", os.path.join(APP, "AndroidManifest.xml"),
+         "--manifest", os.path.join(APP, "src", "main", "AndroidManifest.xml"),
          "-R", res_zip,
          "--java", gen_dir,
          "--min-sdk-version", MIN_SDK,

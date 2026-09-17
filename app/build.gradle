@@ -1,0 +1,31 @@
+// 应用模块构建脚本
+apply plugin: 'com.android.application'
+
+android {
+    // 用 33 是因为本机 SDK 只装了 android-33 平台；build-tools 用已装的 32.0.0
+    compileSdk 33
+    buildToolsVersion "32.0.0"
+
+    defaultConfig {
+        applicationId "com.jizhang.assistant"
+        minSdk 23
+        targetSdk 33
+        versionCode 9
+        versionName "1.3.3"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+// 纯 Java 项目，无任何第三方依赖
+dependencies {
+}

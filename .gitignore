@@ -12,6 +12,9 @@ debug.keystore
 *.jks
 keystore.properties
 
+# ---------- Gradle ----------
+.gradle/
+local.properties
 # ---------- IDE / 编辑器 ----------
 .idea/
 *.iml

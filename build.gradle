@@ -1,0 +1,4 @@
+// 根构建脚本：只声明 Android Gradle Plugin 版本，不在这里做具体配置
+plugins {
+    id 'com.android.application' version '7.4.2' apply false
+}

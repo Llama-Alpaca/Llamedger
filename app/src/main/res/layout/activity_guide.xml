@@ -11,7 +11,7 @@
             android:textColor="@color/text" />
 
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="需要授予两项系统权限，记账助手才能在你付款后自动记录。"
+            android:text="需要授予两项系统权限，Llamedger才能在你付款后自动记录。"
             android:textSize="13sp" android:textColor="@color/text_sub"
             android:layout_marginTop="6dp" android:layout_marginBottom="16dp" />
 
@@ -33,7 +33,7 @@
                     android:layout_marginLeft="10dp" android:layout_marginStart="10dp" />
             </LinearLayout>
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="招行 App、微信、支付宝的付款通知都靠它读取。\n路径：设置 → 通知和状态栏 → 通知使用权 → 找到「记账助手」并打开。"
+                android:text="招行 App、微信、支付宝的付款通知都靠它读取。\n路径：设置 → 通知和状态栏 → 通知使用权 → 找到「Llamedger」并打开。"
                 android:textSize="13sp" android:textColor="@color/text_sub"
                 android:lineSpacingExtra="3dp" android:layout_marginTop="10dp" />
             <TextView android:id="@+id/state1"

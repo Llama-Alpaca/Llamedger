@@ -5,8 +5,8 @@ import io, os, re, sys, collections
 
 ROOT = r"D:\Download\jizhang"
 APP = os.path.join(ROOT, "app")
-RES = os.path.join(APP, "res")
-JAVA = os.path.join(APP, "java")
+RES = os.path.join(APP, "src", "main", "res")
+JAVA = os.path.join(APP, "src", "main", "java")
 
 # ---- 收集布局里的 id ----
 layout_ids = {}
@@ -106,7 +106,7 @@ print("检查了 %d 个 Java 文件，%d 个布局，%d 个自定义 View"
       % (checked, len(layout_ids), len(custom_views)))
 print()
 # ---- 清单里的图标引用必须能解析到 ----
-man = io.open(os.path.join(APP, "AndroidManifest.xml"), encoding="utf-8").read()
+man = io.open(os.path.join(APP, "src", "main", "AndroidManifest.xml"), encoding="utf-8").read()
 for kind, pool in (("mipmap", mipmaps), ("drawable", drawables)):
     for ref in re.findall(r'@%s/(\w+)' % kind, man):
         if ref not in pool:

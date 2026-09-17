@@ -33,7 +33,7 @@ TEST_CLASSES = ["CoreTest"]
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    srcs = collect(os.path.join("app", "java", "com", "jizhang", "assistant", "core"), "tests")
+    srcs = collect(os.path.join("app", "src", "main", "java", "com", "jizhang", "assistant", "core"), "tests")
     for e in EXTRA_SOURCES:
         p = os.path.join(ROOT, e)
         if os.path.exists(p) and p not in srcs:
